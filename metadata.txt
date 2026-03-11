@@ -1,0 +1,11 @@
+[general]
+name=Traffic Data to ENVI-met
+qgisMinimumVersion=3.0
+description=Generates ENVI-met Emission Sources for Model Area and Database based on Traffic Trajectories
+version=1.0
+author=Tim Sinsel
+email=t.sinsel@geo.uni-mainz.de
+repository=https://github.com/tim-sinsel-jgu-mz/Traffic2ENVI-met
+about=Generates ENVI-met Emission Sources for Model Area and Database based on Traffic Trajectories
+tracker=
+hasProcessingProvider=False
