@@ -292,6 +292,11 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         
         self.start_button = self.buttonBox.button(QDialogButtonBox.Ok)
         self.start_button.setText("Start")
+        
+        self.cancel_button = self.buttonBox.button(QDialogButtonBox.Cancel)
+        self.cancel_button.setEnabled(False) # Disabled until task starts
+
+        self.close_button = self.buttonBox.addButton(QDialogButtonBox.Close)
 
         try:
             self.buttonBox.accepted.disconnect()
@@ -299,9 +304,10 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         except TypeError:
             pass 
 
-        self.buttonBox.accepted.connect(self.run_process)
-        self.buttonBox.rejected.connect(self.cancel_or_close)
-
+        # Connect specific buttons to specific functions
+        self.start_button.clicked.connect(self.run_process)
+        self.cancel_button.clicked.connect(self.cancel_task)
+        self.close_button.clicked.connect(self.close_dialog)
         # Set UI Filters and Defaults with Boundaries
         self.mMapLayerComboBox_Streets.setFilters(QgsMapLayerProxyModel.LineLayer)
         self.mMapLayerComboBox_TrafficTrajectories.setFilters(QgsMapLayerProxyModel.LineLayer)
@@ -385,19 +391,28 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
                 self.mFieldComboBox_TripID.setField(f)
                 break
 
-    def cancel_or_close(self):
+    def toggle_ui_state(self, is_running):
+        """Helper to cleanly swap button states."""
+        self.start_button.setEnabled(not is_running)
+        self.close_button.setEnabled(not is_running)
+        self.cancel_button.setEnabled(is_running)
+
+    def cancel_task(self):
         if self.active_task and self.active_task.isActive():
             self.active_task.cancel()
             self.progressBar.setValue(0)
-            self.start_button.setEnabled(True)
+            self.toggle_ui_state(is_running=False)
             self.active_task = None
             print("--- Traffic2ENVI-met Cancelled by User ---")
             QMessageBox.information(self, "Cancelled", "Traffic processing was cancelled.")
-        else:
-            self.reject()
+
+    def close_dialog(self):
+        if self.active_task and self.active_task.isActive():
+            self.active_task.cancel()
+        self.reject()
 
     def on_task_finished(self, result, exception):
-        self.start_button.setEnabled(True)
+        self.toggle_ui_state(is_running=False)
         self.active_task = None
         if exception:
             QMessageBox.critical(self, "Error", f"An error occurred:\n{exception}")
@@ -437,12 +452,10 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
             'output_file': output_file
         }
 
-        self.start_button.setEnabled(False)
+        self.toggle_ui_state(is_running=True)
         self.progressBar.setValue(0)
 
         self.active_task = TrafficEnviTask("Calculating Traffic Trajectories & Emissions", params, self.on_task_finished)
-        
-        # Intercept the signal and force the float into an int before the progress bar gets it
         self.active_task.progressChanged.connect(lambda val: self.progressBar.setValue(int(val)))
         
         QgsApplication.taskManager().addTask(self.active_task)

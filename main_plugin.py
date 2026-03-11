@@ -14,10 +14,10 @@ class Traffic2ENVIPlugin:
 
     def initGui(self):
         """Called when QGIS loads the plugin. Sets up the UI."""
-        self.action = QAction("Traffic to ENVI-met", self.iface.mainWindow())
+        icon_path = os.path.join(self.plugin_dir, 'icon.png')
+        self.action = QAction(QIcon(icon_path), "Traffic to ENVI-met", self.iface.mainWindow())
         self.action.triggered.connect(self.run)
 
-        # Add toolbar button and menu item in QGIS
         self.iface.addToolBarIcon(self.action)
         self.iface.addPluginToMenu("&Traffic to ENVI-met", self.action)
 
