@@ -246,7 +246,7 @@ class TrafficEnviTask(QgsTask):
 
                 json_db["envimetDatafile"]["emitters"].append({
                     "id": envi_id, "desc": f"Traffic Line {envi_id}", "col": "81E908",
-                    "grp": "Emitters", "height": 0.5, "geom": "line",
+                    "grp": "Emitters", "height": 0.2, "geom": "line",
                     "emissionUsr": em_usr, "emissionNO": em_no, "emissionNO2": em_no2,
                     "emissionO3": em_o3, "emissionPM10": em_pm10, "emissionPM25": em_pm25,
                     "cost": 0, "remark": "Generated Line Source"

@@ -56,7 +56,7 @@
          <x>18</x>
          <y>16</y>
          <width>531</width>
-         <height>591</height>
+         <height>598</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -83,7 +83,7 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Select Datetime Field in Traffic Trajectory Dataset</string>
+           <string>Select Time Field in Traffic Trajectory Dataset Defining Trip Start Time After Midnight [s]</string>
           </property>
          </widget>
         </item>
@@ -93,7 +93,7 @@
         <item>
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Select Trip ID Field in Traffic Trajectory Dataset</string>
+           <string>Select Trip ID Field in Traffic Trajectory Dataset as Trip Identifier for Trajectories</string>
           </property>
          </widget>
         </item>
@@ -212,8 +212,8 @@
     <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>690</y>
+       <x>40</x>
+       <y>700</y>
        <width>531</width>
        <height>80</height>
       </rect>
@@ -238,7 +238,7 @@
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>230</x>
        <y>790</y>
        <width>341</width>
        <height>32</height>
@@ -248,7 +248,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Close</set>
      </property>
     </widget>
    </widget>

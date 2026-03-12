@@ -33,26 +33,28 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         
         self.progressBar_2.setValue(0)
         
-        self.buttonBox.button(BTN_OK).hide()
-        
+        # Map the custom execute button
         self.start_button = self.pushButton_Execute_2
         self.start_button.setText("Execute")
         
+        # Grab references to the standard buttons you enabled in the .ui file
         self.cancel_button = self.buttonBox.button(BTN_CANCEL)
-        self.cancel_button.setEnabled(False)
-        self.close_button = self.buttonBox.addButton(BTN_CLOSE)
+        self.close_button = self.buttonBox.button(BTN_CLOSE)
 
+        # Set initial states (Cancel is only active during processing)
+        self.cancel_button.setEnabled(False)
+
+        # Disconnect standard Qt behavior so Cancel doesn't instantly close the window
         try:
             self.buttonBox.accepted.disconnect()
             self.buttonBox.rejected.disconnect()
         except TypeError:
             pass 
 
-        # Connections
+        # Connect buttons to their respective functions
         self.start_button.clicked.connect(self.run_process)
         self.cancel_button.clicked.connect(self.cancel_task)
         self.close_button.clicked.connect(self.close_dialog)
-
         # Filters and Defaults
         self.mMapLayerComboBox_Streets.setFilters(FILTER_LINE)
         self.mMapLayerComboBox_TrafficTrajectories.setFilters(FILTER_LINE)
@@ -60,16 +62,18 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         # Boundaries & Defaults Setup
         self.mQgsDoubleSpinBox_SearchRadius.setRange(0.1, 100.0)
         self.mQgsDoubleSpinBox_SearchRadius.setValue(5.0)
-        self.mQgsDoubleSpinBox_StreetSegmentSize.setRange(0.5, 50.0)
+        self.mQgsDoubleSpinBox_StreetSegmentSize.setRange(0.5, 1000.0)
         self.mQgsDoubleSpinBox_StreetSegmentSize.setValue(2.0)
-        self.mQgsDoubleSpinBox_SimilarityTolerance.setRange(0.0, 50.0)
+        self.mQgsDoubleSpinBox_SimilarityTolerance.setRange(0.0, 1000.0)
         self.mQgsDoubleSpinBox_SimilarityTolerance.setValue(3.0)
-        self.mQgsDoubleSpinBox_ScalingFactor.setRange(0.1, 1000.0)
+        self.mQgsDoubleSpinBox_ScalingFactor.setRange(0.1, 10000.0)
         self.mQgsDoubleSpinBox_ScalingFactor.setValue(5.0)
         self.mQgsDoubleSpinBox_EmFacNOx.setRange(0.0, 100.0)
         self.mQgsDoubleSpinBox_EmFacNOx.setValue(0.180)
+        self.mQgsDoubleSpinBox_EmFacNOx.setSingleStep(0.010)
         self.mQgsDoubleSpinBox_EmFacPM10.setRange(0.0, 100.0)
         self.mQgsDoubleSpinBox_EmFacPM10.setValue(0.020)
+        self.mQgsDoubleSpinBox_EmFacPM10.setSingleStep(0.010)
         self.mQgsDoubleSpinBox_NORatio.setRange(0.0, 1.0)
         self.mQgsDoubleSpinBox_NORatio.setSingleStep(0.05) 
         self.mQgsDoubleSpinBox_NORatio.setValue(0.5)
