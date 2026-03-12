@@ -1,6 +1,7 @@
 [general]
 name=Traffic Data to ENVI-met
-qgisMinimumVersion=3.0
+qgisMinimumVersion=3.22
+qgisMaximumVersion=4.99
 description=Generates ENVI-met Emission Sources for Model Area and Database based on Traffic Trajectories
 version=1.0
 author=Tim Sinsel
@@ -10,5 +11,6 @@ repository=https://github.com/tim-sinsel-jgu-mz/Traffic2ENVI-met
 tracker=https://github.com/tim-sinsel-jgu-mz/Traffic2ENVI-met/issues
 changelog=https://github.com/tim-sinsel-jgu-mz/Traffic2ENVI-met/releases
 about=A spatial tool that converts raw traffic trajectory data and OSM street networks into ENVI-met JSON line emitters. It performs spatial intersections, smart geometry segmentation, and automatic emission calculations (NOx, PM10) to generate an ENVI-met ready projectdatabase.edb alongside a spatial GeoPackage map layer.
+icon=icon.png
 hasProcessingProvider=False
 tags=traffic, envi-met, emissions, air pollution, pollutants, particulate matter, nitrogen dioxide, nitrogen oxide, urban climate, microclimate, modelling, trajectories

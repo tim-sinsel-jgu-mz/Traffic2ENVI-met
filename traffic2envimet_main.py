@@ -10,7 +10,7 @@ from qgis.core import (
     QgsProcessingContext, QgsMapLayerProxyModel, Qgis
 )
 from qgis.gui import QgsFileWidget
-from PyQt5.QtCore import QVariant, QMetaType, pyqtSignal
+from qgis.PyQt.QtCore import QVariant, QMetaType, pyqtSignal
 
 # --- Universal Field Types (QGIS 3 & QGIS 4 Compatibility) ---
 try:
@@ -21,6 +21,24 @@ except AttributeError:
     # Old Standard: Older QGIS 3.x versions (PyQt5)
     FIELD_TYPE_STRING = QVariant.String
     FIELD_TYPE_INT = QVariant.Int
+
+# --- Universal Enums (QGIS 3 / PyQt5 & QGIS 4 / PyQt6 Compatibility) ---
+try:
+    # QGIS 4 / PyQt6 Strict Enums
+    BTN_OK = QDialogButtonBox.StandardButton.Ok
+    BTN_CANCEL = QDialogButtonBox.StandardButton.Cancel
+    BTN_CLOSE = QDialogButtonBox.StandardButton.Close
+    FILTER_LINE = QgsMapLayerProxyModel.Filter.LineLayer
+    STORAGE_SAVE = QgsFileWidget.StorageMode.SaveFile
+    TASK_CANCEL_FLAG = QgsTask.Flag.CanCancel
+except AttributeError:
+    # QGIS 3 / PyQt5 Flat Enums
+    BTN_OK = QDialogButtonBox.Ok
+    BTN_CANCEL = QDialogButtonBox.Cancel
+    BTN_CLOSE = QDialogButtonBox.Close
+    FILTER_LINE = QgsMapLayerProxyModel.LineLayer
+    STORAGE_SAVE = QgsFileWidget.SaveFile
+    TASK_CANCEL_FLAG = QgsTask.CanCancel
 
 # Load the UI file
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -33,7 +51,7 @@ class TrafficEnviTask(QgsTask):
     log_message = pyqtSignal(str)
     
     def __init__(self, description, params, on_finished_callback):
-        super().__init__(description, QgsTask.CanCancel)
+        super().__init__(description, TASK_CANCEL_FLAG)
         self.params = params
         self.on_finished_callback = on_finished_callback
         self.exception = None
@@ -304,16 +322,16 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.progressBar_2.setValue(0)
         
         # Hide the default OK button since we have a custom Execute button
-        self.buttonBox.button(QDialogButtonBox.Ok).hide()
+        self.buttonBox.button(BTN_OK).hide()
         
         # Map the custom execute button
         self.start_button = self.pushButton_Execute_2
         self.start_button.setText("Execute")
         
-        self.cancel_button = self.buttonBox.button(QDialogButtonBox.Cancel)
-        self.cancel_button.setEnabled(False) # Disabled until task starts
+        self.cancel_button = self.buttonBox.button(BTN_CANCEL)
+        self.cancel_button.setEnabled(False)
 
-        self.close_button = self.buttonBox.addButton(QDialogButtonBox.Close)
+        self.close_button = self.buttonBox.addButton(BTN_CLOSE)
 
         try:
             self.buttonBox.accepted.disconnect()
@@ -326,8 +344,8 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.cancel_button.clicked.connect(self.cancel_task)
         self.close_button.clicked.connect(self.close_dialog)
         # Set UI Filters and Defaults with Boundaries
-        self.mMapLayerComboBox_Streets.setFilters(QgsMapLayerProxyModel.LineLayer)
-        self.mMapLayerComboBox_TrafficTrajectories.setFilters(QgsMapLayerProxyModel.LineLayer)
+        self.mMapLayerComboBox_Streets.setFilters(FILTER_LINE)
+        self.mMapLayerComboBox_TrafficTrajectories.setFilters(FILTER_LINE)
 
         self.mQgsDoubleSpinBox_SearchRadius.setValue(5.0)
         self.mQgsDoubleSpinBox_StreetSegmentSize.setValue(2.0)
@@ -378,7 +396,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.mQgsDoubleSpinBox_PMRatio.setToolTip("Fraction (0.0 to 1.0) of PM10 that consists of PM2.5.")         
 
         self.mQgsFileWidget_OutputFile.setFilter("GeoPackage (*.gpkg)")
-        self.mQgsFileWidget_OutputFile.setStorageMode(QgsFileWidget.SaveFile)
+        self.mQgsFileWidget_OutputFile.setStorageMode(STORAGE_SAVE)
         self.mQgsFileWidget_OutputFile.setDialogTitle("Save Output GeoPackage")
 
         self.mMapLayerComboBox_TrafficTrajectories.layerChanged.connect(self.update_smart_fields)
