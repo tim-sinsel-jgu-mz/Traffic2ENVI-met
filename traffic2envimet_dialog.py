@@ -4,7 +4,6 @@ from qgis.PyQt.QtWidgets import QDialog, QMessageBox, QDialogButtonBox
 from qgis.core import QgsApplication, QgsMapLayerProxyModel, QgsProject
 from qgis.gui import QgsFileWidget
 
-# Import your newly separated logic
 from .traffic2envimet_logic import TrafficEnviTask
 
 # --- Universal Enums (QGIS 3 / PyQt5 & QGIS 4 / PyQt6 Compatibility) ---
@@ -37,7 +36,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.start_button = self.pushButton_Execute_2
         self.start_button.setText("Execute")
         
-        # Grab references to the standard buttons you enabled in the .ui file
+        # Grab references to standard buttons in UI
         self.cancel_button = self.buttonBox.button(BTN_CANCEL)
         self.close_button = self.buttonBox.button(BTN_CLOSE)
 
@@ -55,6 +54,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.start_button.clicked.connect(self.run_process)
         self.cancel_button.clicked.connect(self.cancel_task)
         self.close_button.clicked.connect(self.close_dialog)
+        
         # Filters and Defaults
         self.mMapLayerComboBox_Streets.setFilters(FILTER_LINE)
         self.mMapLayerComboBox_TrafficTrajectories.setFilters(FILTER_LINE)
