@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>588</width>
-    <height>723</height>
+    <width>602</width>
+    <height>803</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>-11</x>
      <y>-31</y>
      <width>641</width>
-     <height>771</height>
+     <height>951</height>
     </rect>
    </property>
    <property name="widgetResizable">
@@ -31,156 +31,215 @@
       <x>0</x>
       <y>0</y>
       <width>639</width>
-      <height>769</height>
+      <height>949</height>
      </rect>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget">
+    <widget class="QTabWidget" name="tabWidget">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>50</y>
-       <width>541</width>
-       <height>598</height>
+       <x>20</x>
+       <y>40</y>
+       <width>571</width>
+       <height>651</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="label">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="parameter">
+      <attribute name="title">
+       <string>Parameter</string>
+      </attribute>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>18</x>
+         <y>16</y>
+         <width>531</width>
+         <height>591</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Select Street Layer (Line-Geometry)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_Streets"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Select Traffic Trajectory Layer (Line-Geometry)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_TrafficTrajectories"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Select Datetime Field in Traffic Trajectory Dataset</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsFieldComboBox" name="mFieldComboBox_DateTime"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Select Trip ID Field in Traffic Trajectory Dataset</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsFieldComboBox" name="mFieldComboBox_TripID"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Define Traffic Trajectory Search Radius around Street Layer [m]</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SearchRadius"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Define Individual Street Layer Segment Size For Splitting [m]</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_StreetSegmentSize"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Define Similarity Tolerance in Traffic Count between Neighbouring Street Segments</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SimilarityTolerance"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Define Scaling Factor for Traffic Volume if Trajectory Data Represents only a Portion of Real Volume</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_ScalingFactor"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Define Emission Factor of NOx [g/km]</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacNOx"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Define Emission Factor of PM10 [g/km]</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacPM10"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Define Ratio for NO/NOx Splits</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NORatio"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Define Ratio for PM2.5/PM10 Splits</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_PMRatio"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Output File</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QgsFileWidget" name="mQgsFileWidget_OutputFile"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="protocol">
+      <attribute name="title">
+       <string>Protocol</string>
+      </attribute>
+      <widget class="QTextEdit" name="textEdit_ProtocolLog">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>531</width>
+         <height>601</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>690</y>
+       <width>531</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pushButton_Execute_2">
         <property name="text">
-         <string>Select Street Layer (Line-Geometry)</string>
+         <string>PushButton</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_Streets"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Select Traffic Trajectory Layer (Line-Geometry)</string>
+      <item row="1" column="0" colspan="2">
+       <widget class="QProgressBar" name="progressBar_2">
+        <property name="value">
+         <number>24</number>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_TrafficTrajectories"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Select Datetime Field in Traffic Trajectory Dataset</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsFieldComboBox" name="mFieldComboBox_DateTime"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Select Trip ID Field in Traffic Trajectory Dataset</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsFieldComboBox" name="mFieldComboBox_TripID"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Define Traffic Trajectory Search Radius around Street Layer [m]</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SearchRadius"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Define Individual Street Layer Segment Size For Splitting [m]</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_StreetSegmentSize"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Define Similarity Tolerance in Traffic Count between Neighbouring Street Segments</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SimilarityTolerance"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Define Scaling Factor for Traffic Volume if Trajectory Data Represents only a Portion of Real Volume</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_ScalingFactor"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Define Emission Factor of NOx [g/km]</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacNOx"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Define Emission Factor of PM10 [g/km]</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacPM10"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Define Ratio for NO/NOx Splits</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NORatio"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Define Ratio for PM2.5/PM10 Splits</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_PMRatio"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Output File</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QgsFileWidget" name="mQgsFileWidget_OutputFile"/>
       </item>
      </layout>
     </widget>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>710</y>
+       <x>240</x>
+       <y>790</y>
        <width>341</width>
        <height>32</height>
       </rect>
@@ -218,38 +277,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

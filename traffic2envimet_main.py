@@ -10,7 +10,17 @@ from qgis.core import (
     QgsProcessingContext, QgsMapLayerProxyModel, Qgis
 )
 from qgis.gui import QgsFileWidget
-from PyQt5.QtCore import QVariant, QMetaType
+from PyQt5.QtCore import QVariant, QMetaType, pyqtSignal
+
+# --- Universal Field Types (QGIS 3 & QGIS 4 Compatibility) ---
+try:
+    # New Standard: QGIS 3.38+ and QGIS 4 (PyQt6)
+    FIELD_TYPE_STRING = QMetaType.Type.QString
+    FIELD_TYPE_INT = QMetaType.Type.Int
+except AttributeError:
+    # Old Standard: Older QGIS 3.x versions (PyQt5)
+    FIELD_TYPE_STRING = QVariant.String
+    FIELD_TYPE_INT = QVariant.Int
 
 # Load the UI file
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -18,6 +28,9 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class TrafficEnviTask(QgsTask):
     """Background task to calculate traffic trajectories and emissions."""
+
+    # Create a custom signal to send strings to the log
+    log_message = pyqtSignal(str)
     
     def __init__(self, description, params, on_finished_callback):
         super().__init__(description, QgsTask.CanCancel)
@@ -29,7 +42,7 @@ class TrafficEnviTask(QgsTask):
 
     def run(self):
         try:
-            print("--- Traffic2ENVI-met Started ---")
+            self.log_message.emit("--- Traffic2ENVI-met Started ---")
             osm_source = self.params['osm_source']
             traj_source = self.params['traj_source']
             crs_str = self.params['crs_str']
@@ -54,7 +67,7 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(5.0)
 
             # --- STEP 1 ---
-            print("Step 1/7: Filtering and splitting OSM lines...")
+            self.log_message.emit("Step 1/7: Filtering and splitting OSM lines...")
             context = QgsProcessingContext()
             expression = "\"fclass\" IN ('primary', 'primary_link', 'residential', 'secondary', 'secondary_link')"
             filtered_osm = processing.run("native:extractbyexpression", {
@@ -71,11 +84,12 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(15.0)
 
             # --- STEP 2 ---
-            print("Step 2/7: Preparing memory layer and spatial index...")
+            self.log_message.emit("Step 2/7: Preparing memory layer and spatial index...")
             memory_layer = QgsVectorLayer(f"LineString?crs={crs_str}", "Temp_Counts", "memory")
             provider = memory_layer.dataProvider()
-            provider.addAttributes([QgsField("tempID", QMetaType.Type.Int)])
-            for h in range(24): provider.addAttributes([QgsField(f"h_{h:02d}", QMetaType.Type.Int)])
+            provider.addAttributes([QgsField("tempID", FIELD_TYPE_INT)])
+            for h in range(24): 
+                provider.addAttributes([QgsField(f"h_{h:02d}", FIELD_TYPE_INT)])
             memory_layer.updateFields()
 
             new_features = []
@@ -100,7 +114,7 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(30.0)
 
             # --- STEP 3 ---
-            print("Step 3/7: Counting unique trajectories per segment...")
+            self.log_message.emit("Step 3/7: Counting unique trajectories per segment...")
             update_map = {}
             h_indices = {h: memory_layer.fields().indexOf(f"h_{h:02d}") for h in range(24)}
 
@@ -133,7 +147,7 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(60.0)
 
             # --- STEP 4 ---
-            print("Step 4/7: Merging similar adjacent segments...")
+            self.log_message.emit("Step 4/7: Merging similar adjacent segments...")
             mem_index = QgsSpatialIndex(memory_layer.getFeatures())
             mem_features = {f.id(): f for f in memory_layer.getFeatures()}
             visited, groups = set(), []
@@ -178,11 +192,12 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(80.0)
 
             # --- STEP 5 ---
-            print("Step 5/7: Applying scaling factor...")
+            self.log_message.emit("Step 5/7: Applying scaling factor...")
             final_layer = QgsVectorLayer(f"MultiLineString?crs={crs_str}", "Final_Merged_Counts", "memory")
             final_prov = final_layer.dataProvider()
-            final_prov.addAttributes([QgsField("enviID", QMetaType.Type.String, len=6)])
-            for h in range(24): final_prov.addAttributes([QgsField(f"h_{h:02d}", QMetaType.Type.Int)])
+            final_prov.addAttributes([QgsField("enviID", FIELD_TYPE_STRING, len=6)])
+            for h in range(24): 
+                final_prov.addAttributes([QgsField(f"h_{h:02d}", FIELD_TYPE_INT)])
             final_layer.updateFields()
 
             final_feats = []
@@ -205,7 +220,7 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(90.0)
 
             # --- STEP 6 ---
-            print("Step 6/7: Generating ENVI-met JSON database...")
+            self.log_message.emit("Step 6/7: Generating ENVI-met JSON database...")
             ef_no = ef_nox * (1 - v_ratio_no)
             ef_no2 = ef_nox * v_ratio_no
             ef_pm25 = ef_pm10 * v_ratio_pm
@@ -249,7 +264,7 @@ class TrafficEnviTask(QgsTask):
             self.setProgress(95.0)
 
             # --- STEP 7 ---
-            print("Step 7/7: Saving output vectors to GeoPackage...")
+            self.log_message.emit("Step 7/7: Saving output vectors to GeoPackage...")
             save_opts = QgsVectorFileWriter.SaveVectorOptions()
             save_opts.driverName = "GPKG"
             save_opts.layerName = "segment_counts"
@@ -258,12 +273,12 @@ class TrafficEnviTask(QgsTask):
             self.layer_name = os.path.splitext(os.path.basename(self.output_gpkg))[0]
             
             self.setProgress(100.0)
-            print("--- Traffic2ENVI-met Complete ---")
+            self.log_message.emit("--- Traffic2ENVI-met Complete ---")
             return True
 
         except Exception as e:
             self.exception = e
-            print(f"ERROR in Traffic2ENVI-met: {str(e)}")
+            self.log_message.emit(f"ERROR in Traffic2ENVI-met: {str(e)}")
             return False
 
     def finished(self, result):
@@ -273,7 +288,7 @@ class TrafficEnviTask(QgsTask):
                 QgsProject.instance().addMapLayer(gpkg_layer)
         else:
             if self.exception:
-                print(f"Task Failed: {self.exception}")
+                self.log_message.emit(f"Task Failed: {self.exception}")
         
         if self.on_finished_callback:
             self.on_finished_callback(result, self.exception)
@@ -285,12 +300,15 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.setupUi(self)
         self.active_task = None
         
-        self.progressBar = QProgressBar()
-        self.progressBar.setValue(0)
-        self.verticalLayout.addWidget(self.progressBar)
+        # Initialize the new static progress bar from the UI
+        self.progressBar_2.setValue(0)
         
-        self.start_button = self.buttonBox.button(QDialogButtonBox.Ok)
-        self.start_button.setText("Start")
+        # Hide the default OK button since we have a custom Execute button
+        self.buttonBox.button(QDialogButtonBox.Ok).hide()
+        
+        # Map the custom execute button
+        self.start_button = self.pushButton_Execute_2
+        self.start_button.setText("Execute")
         
         self.cancel_button = self.buttonBox.button(QDialogButtonBox.Cancel)
         self.cancel_button.setEnabled(False) # Disabled until task starts
@@ -396,13 +414,17 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.close_button.setEnabled(not is_running)
         self.cancel_button.setEnabled(is_running)
 
+    def append_log(self, text):
+        """Appends text to the Protocol text edit."""
+        self.textEdit_ProtocolLog.append(text)      
+
     def cancel_task(self):
         if self.active_task and self.active_task.isActive():
             self.active_task.cancel()
-            self.progressBar.setValue(0)
+            self.progressBar_2.setValue(0)
             self.toggle_ui_state(is_running=False)
             self.active_task = None
-            print("--- Traffic2ENVI-met Cancelled by User ---")
+            self.append_log("--- Traffic2ENVI-met Cancelled by User ---")
             QMessageBox.information(self, "Cancelled", "Traffic processing was cancelled.")
 
     def close_dialog(self):
@@ -412,17 +434,13 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
 
     def on_task_finished(self, result, exception):
         self.toggle_ui_state(is_running=False)
-        self.progressBar.setValue(0)
+        self.progressBar_2.setValue(0)
         self.active_task = None
         
         if exception:
-            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing failed.")
             QMessageBox.critical(self, "Error", f"An error occurred:\n{exception}")
         elif result:
-            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing finished successfully.")
             QMessageBox.information(self, "Success", "Processing complete! Outputs have been saved.")
-        else:
-            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing cancelled.")
 
     def run_process(self):
         osm_layer = self.mMapLayerComboBox_Streets.currentLayer()
@@ -458,9 +476,16 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         }
 
         self.toggle_ui_state(is_running=True)
-        self.progressBar.setValue(0)
+        self.progressBar_2.setValue(0)
+
+        # Switch to the Protocol tab (index 1) and clear previous logs
+        self.tabWidget.setCurrentIndex(1)
+        self.textEdit_ProtocolLog.clear()
 
         self.active_task = TrafficEnviTask("Calculating Traffic Trajectories & Emissions", params, self.on_task_finished)
-        self.active_task.progressChanged.connect(lambda val: self.progressBar.setValue(int(val)))
+        
+        # Connect progress and logging signals to the UI
+        self.active_task.progressChanged.connect(lambda val: self.progressBar_2.setValue(int(val)))
+        self.active_task.log_message.connect(self.append_log)
         
         QgsApplication.taskManager().addTask(self.active_task)

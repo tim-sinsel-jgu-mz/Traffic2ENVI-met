@@ -15,16 +15,24 @@ class Traffic2ENVIPlugin:
     def initGui(self):
         """Called when QGIS loads the plugin. Sets up the UI."""
         icon_path = os.path.join(self.plugin_dir, 'icon.png')
-        self.action = QAction(QIcon(icon_path), "Traffic to ENVI-met", self.iface.mainWindow())
+        self.action = QAction(QIcon(icon_path), "Traffic Data to ENVI-met", self.iface.mainWindow())
         self.action.triggered.connect(self.run)
 
+        # 1. Add toolbar button (This remains unchanged)
         self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu("&Traffic to ENVI-met", self.action)
+
+        # 2. Add plugin to the Vector Menu
+        # We replace iface.addPluginToDatabaseMenu() with iface.addPluginToVectorMenu()
+        self.iface.addPluginToVectorMenu("Traffic Data to ENVI-met", self.action)
 
     def unload(self):
         """Called when QGIS is closed or the plugin is disabled."""
-        self.iface.removePluginMenu("&Traffic to ENVI-met", self.action)
+        # Remove toolbar button (This remains unchanged)
         self.iface.removeToolBarIcon(self.action)
+
+        # Remove plugin from the Vector Menu
+        # We replace iface.removePluginFromDatabaseMenu() with iface.removePluginFromVectorMenu()
+        self.iface.removePluginVectorMenu("Traffic Data to ENVI-met", self.action)
 
     def run(self):
         """Called when the user clicks the plugin button."""
