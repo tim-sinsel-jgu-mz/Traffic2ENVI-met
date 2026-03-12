@@ -84,7 +84,7 @@ class TrafficEnviTask(QgsTask):
             provider = memory_layer.dataProvider()
             provider.addAttributes([QgsField("tempID", FIELD_TYPE_INT)])
             for h in range(24): 
-                provider.addAttributes([QgsField(f"h_{h:02d}", FIELD_TYPE_INT)])
+                provider.addAttributes([QgsField(f"hour_{h:02d}", FIELD_TYPE_INT)])
             memory_layer.updateFields()
 
             new_features = []

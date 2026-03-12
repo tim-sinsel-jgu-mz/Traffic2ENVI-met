@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
-    <height>803</height>
+    <width>606</width>
+    <height>812</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,129 +61,213 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_StreetLayer">
+          <property name="toolTip">
+           <string>Select the street layer as basis for the traffic volume calculations. Recommend source: OpenStreetMap data.</string>
+          </property>
           <property name="text">
            <string>Select Street Layer (Line-Geometry)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_Streets"/>
+         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_Streets">
+          <property name="toolTip">
+           <string>Select the street layer as basis for the traffic volume calculations. Recommend source: OpenStreetMap data.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="label_TrafficTrajLayer">
+          <property name="toolTip">
+           <string>Select the traffic trajectory data, e.g. from model runs. One line should represent one car trip. </string>
+          </property>
           <property name="text">
            <string>Select Traffic Trajectory Layer (Line-Geometry)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_TrafficTrajectories"/>
+         <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox_TrafficTrajectories">
+          <property name="toolTip">
+           <string>Select the traffic trajectory data, e.g. from model runs. One line should represent one car trip. </string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="label_TimeField">
+          <property name="toolTip">
+           <string>Dataset should have a start time in seconds since model start to enable the sorting of trips to the corresponding hours of a day.</string>
+          </property>
           <property name="text">
            <string>Select Time Field in Traffic Trajectory Dataset Defining Trip Start Time After Midnight [s]</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsFieldComboBox" name="mFieldComboBox_DateTime"/>
+         <widget class="QgsFieldComboBox" name="mFieldComboBox_DateTime">
+          <property name="toolTip">
+           <string>Dataset should have a start time in seconds since model start to enable the sorting of trips to the corresponding hours of a day.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_5">
+         <widget class="QLabel" name="label_TridIDField">
+          <property name="toolTip">
+           <string>Dataset should have an ID field to check if a trajectory line is unique or if there are several parts for one car trip.</string>
+          </property>
           <property name="text">
            <string>Select Trip ID Field in Traffic Trajectory Dataset as Trip Identifier for Trajectories</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsFieldComboBox" name="mFieldComboBox_TripID"/>
+         <widget class="QgsFieldComboBox" name="mFieldComboBox_TripID">
+          <property name="toolTip">
+           <string>Dataset should have an ID field to check if a trajectory line is unique or if there are several parts for one car trip.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_4">
+         <widget class="QLabel" name="label_SearchRadius">
+          <property name="toolTip">
+           <string>Distance in meters to search for trajectories around each street segment.</string>
+          </property>
           <property name="text">
            <string>Define Traffic Trajectory Search Radius around Street Layer [m]</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SearchRadius"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SearchRadius">
+          <property name="toolTip">
+           <string>Distance in meters to search for trajectories around each street segment.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_6">
+         <widget class="QLabel" name="label_SegmentSize">
+          <property name="toolTip">
+           <string>Length in meters to split the street lines for high resolution spatial mapping.</string>
+          </property>
           <property name="text">
            <string>Define Individual Street Layer Segment Size For Splitting [m]</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_StreetSegmentSize"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_StreetSegmentSize">
+          <property name="toolTip">
+           <string>Length in meters to split the street lines for high resolution spatial mapping.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_7">
+         <widget class="QLabel" name="label_SimTolerance">
+          <property name="toolTip">
+           <string>Maximum allowed difference in hourly vehicle counts to merge adjacent street segments together. The more segments can be merged, the smaller gets the result file and the amount of needed DB items.</string>
+          </property>
           <property name="text">
            <string>Define Similarity Tolerance in Traffic Count between Neighbouring Street Segments</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SimilarityTolerance"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_SimilarityTolerance">
+          <property name="toolTip">
+           <string>Maximum allowed difference in hourly vehicle counts to merge adjacent street segments together. The more segments can be merged, the smaller gets the result file and the amount of needed DB items.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_8">
+         <widget class="QLabel" name="label_ScalingFac">
+          <property name="toolTip">
+           <string>Multiplier to scale your sample trajectory counts up to real-world total traffic volumes, since model runs typically only contain for example 20% of the real daily traffic volume to reduce computational effort.</string>
+          </property>
           <property name="text">
            <string>Define Scaling Factor for Traffic Volume if Trajectory Data Represents only a Portion of Real Volume</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_ScalingFactor"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_ScalingFactor">
+          <property name="toolTip">
+           <string>Multiplier to scale your sample trajectory counts up to real-world total traffic volumes, since model runs typically only contain for example 20% of the real daily traffic volume to reduce computational effort.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="label_EmFacNO">
+          <property name="toolTip">
+           <string>Base emission factor for Nitrogen Oxides (NOx) for this traffic dataset in grams per kilometer (g/km).</string>
+          </property>
           <property name="text">
            <string>Define Emission Factor of NOx [g/km]</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacNOx"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacNOx">
+          <property name="toolTip">
+           <string>Base emission factor for Nitrogen Oxides (NOx) for this traffic dataset in grams per kilometer (g/km).</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_11">
+         <widget class="QLabel" name="label_EmFacPM">
+          <property name="toolTip">
+           <string>Base emission factor for PM10 (including non-exhaust wear) for this traffic dataset in grams per kilometer (g/km).</string>
+          </property>
           <property name="text">
            <string>Define Emission Factor of PM10 [g/km]</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacPM10"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacPM10">
+          <property name="toolTip">
+           <string>Base emission factor for PM10 (including non-exhaust wear) for this traffic dataset in grams per kilometer (g/km).</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_12">
+         <widget class="QLabel" name="label_NORatio">
+          <property name="toolTip">
+           <string>Fraction (0.0 to 1.0) of NOx that is emitted specifically as NO2.</string>
+          </property>
           <property name="text">
            <string>Define Ratio for NO/NOx Splits</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NORatio"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NORatio">
+          <property name="toolTip">
+           <string>Fraction (0.0 to 1.0) of NOx that is emitted specifically as NO2.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_13">
+         <widget class="QLabel" name="label_PMRatio">
+          <property name="toolTip">
+           <string>Fraction (0.0 to 1.0) of PM10 that consists of PM2.5.</string>
+          </property>
           <property name="text">
            <string>Define Ratio for PM2.5/PM10 Splits</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_PMRatio"/>
+         <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_PMRatio">
+          <property name="toolTip">
+           <string>Fraction (0.0 to 1.0) of PM10 that consists of PM2.5.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_9">
+         <widget class="QLabel" name="label_OutputFile">
           <property name="text">
-           <string>Output File</string>
+           <string>Define Output File of Traffic Volume per Hour. Projectdatabase.edb is Automatically Created next to it</string>
           </property>
          </widget>
         </item>

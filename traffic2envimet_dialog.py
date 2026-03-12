@@ -54,7 +54,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.start_button.clicked.connect(self.run_process)
         self.cancel_button.clicked.connect(self.cancel_task)
         self.close_button.clicked.connect(self.close_dialog)
-        
+
         # Filters and Defaults
         self.mMapLayerComboBox_Streets.setFilters(FILTER_LINE)
         self.mMapLayerComboBox_TrafficTrajectories.setFilters(FILTER_LINE)
@@ -80,16 +80,6 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.mQgsDoubleSpinBox_PMRatio.setRange(0.0, 1.0)
         self.mQgsDoubleSpinBox_PMRatio.setSingleStep(0.05)
         self.mQgsDoubleSpinBox_PMRatio.setValue(0.5)       
-
-        # Tooltips
-        self.mQgsDoubleSpinBox_SearchRadius.setToolTip("Distance in meters to search for trajectories around each street segment.")
-        self.mQgsDoubleSpinBox_StreetSegmentSize.setToolTip("Length in meters to split the street lines for higher resolution spatial mapping.")
-        self.mQgsDoubleSpinBox_SimilarityTolerance.setToolTip("Maximum allowed difference in hourly vehicle counts to merge adjacent street segments together.")
-        self.mQgsDoubleSpinBox_ScalingFactor.setToolTip("Multiplier to scale your sample trajectory counts up to real-world total traffic volumes.")
-        self.mQgsDoubleSpinBox_EmFacNOx.setToolTip("Base emission factor for Nitrogen Oxides (NOx) in grams per kilometer (g/km).")
-        self.mQgsDoubleSpinBox_EmFacPM10.setToolTip("Base emission factor for PM10 (including non-exhaust wear) in grams per kilometer (g/km).")
-        self.mQgsDoubleSpinBox_NORatio.setToolTip("Fraction (0.0 to 1.0) of NOx that is emitted specifically as NO2.")
-        self.mQgsDoubleSpinBox_PMRatio.setToolTip("Fraction (0.0 to 1.0) of PM10 that consists of PM2.5.")         
 
         self.mQgsFileWidget_OutputFile.setFilter("GeoPackage (*.gpkg)")
         self.mQgsFileWidget_OutputFile.setStorageMode(STORAGE_SAVE)
