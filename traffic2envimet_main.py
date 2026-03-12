@@ -271,10 +271,9 @@ class TrafficEnviTask(QgsTask):
             gpkg_layer = QgsVectorLayer(f"{self.output_gpkg}|layername=segment_counts", f"{self.layer_name} Merged Counts", "ogr")
             if gpkg_layer.isValid():
                 QgsProject.instance().addMapLayer(gpkg_layer)
-            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing finished successfully.")
         else:
             if self.exception:
-                QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing failed. Check Python Console.")
+                print(f"Task Failed: {self.exception}")
         
         if self.on_finished_callback:
             self.on_finished_callback(result, self.exception)
@@ -413,11 +412,17 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
 
     def on_task_finished(self, result, exception):
         self.toggle_ui_state(is_running=False)
+        self.progressBar.setValue(0)
         self.active_task = None
+        
         if exception:
+            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing failed.")
             QMessageBox.critical(self, "Error", f"An error occurred:\n{exception}")
         elif result:
+            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing finished successfully.")
             QMessageBox.information(self, "Success", "Processing complete! Outputs have been saved.")
+        else:
+            QgsApplication.taskManager().window().statusBar().showMessage("Traffic processing cancelled.")
 
     def run_process(self):
         osm_layer = self.mMapLayerComboBox_Streets.currentLayer()
