@@ -3,7 +3,7 @@ from qgis.PyQt.QtWidgets import QAction
 from qgis.PyQt.QtGui import QIcon
 
 # This imports your class from the other file!
-from .traffic2envimet_main import Traffic2ENVIMetDialog
+from .traffic2envimet_dialog import Traffic2ENVIMetDialog
 
 class Traffic2ENVIPlugin:
     def __init__(self, iface):
