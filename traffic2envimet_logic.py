@@ -92,7 +92,7 @@ class TrafficEnviTask(QgsTask):
                 new_feat = QgsFeature(memory_layer.fields())
                 new_feat.setGeometry(feat.geometry())
                 new_feat.setAttribute("tempID", i)
-                for h in range(24): new_feat.setAttribute(f"h_{h:02d}", 0)
+                for h in range(24): new_feat.setAttribute(f"hour_{h:02d}", 0)
                 new_features.append(new_feat)
             provider.addFeatures(new_features)
 
@@ -111,7 +111,7 @@ class TrafficEnviTask(QgsTask):
             # --- STEP 3 ---
             self.log_message.emit("Step 3/7: Counting unique trajectories per segment...")
             update_map = {}
-            h_indices = {h: memory_layer.fields().indexOf(f"h_{h:02d}") for h in range(24)}
+            h_indices = {h: memory_layer.fields().indexOf(f"hour_{h:02d}") for h in range(24)}
 
             total_segs = memory_layer.featureCount()
             for idx, seg_feat in enumerate(memory_layer.getFeatures()):
@@ -174,7 +174,7 @@ class TrafficEnviTask(QgsTask):
                             seed_feat = mem_features[current_group[0]]
                             is_similar = True
                             for h in range(24):
-                                if abs(seed_feat[f"h_{h:02d}"] - cand_feat[f"h_{h:02d}"]) > similarity_tolerance:
+                                if abs(seed_feat[f"hour_{h:02d}"] - cand_feat[f"hour_{h:02d}"]) > similarity_tolerance:
                                     is_similar = False
                                     break
                             if is_similar:
@@ -191,7 +191,7 @@ class TrafficEnviTask(QgsTask):
             final_prov = final_layer.dataProvider()
             final_prov.addAttributes([QgsField("enviID", FIELD_TYPE_STRING, len=6)])
             for h in range(24): 
-                final_prov.addAttributes([QgsField(f"h_{h:02d}", FIELD_TYPE_INT)])
+                final_prov.addAttributes([QgsField(f"hour_{h:02d}", FIELD_TYPE_INT)])
             final_layer.updateFields()
 
             final_feats = []
@@ -203,8 +203,8 @@ class TrafficEnviTask(QgsTask):
                 new_feat.setGeometry(merged_geom)
                 new_feat.setAttribute("enviID", f"{envi_id_counter:06d}")
                 for h in range(24):
-                    avg_raw_count = sum([mem_features[fid][f"h_{h:02d}"] for fid in grp]) / len(grp)
-                    new_feat.setAttribute(f"h_{h:02d}", round(avg_raw_count * scaling_factor))
+                    avg_raw_count = sum([mem_features[fid][f"hour_{h:02d}"] for fid in grp]) / len(grp)
+                    new_feat.setAttribute(f"hour_{h:02d}", round(avg_raw_count * scaling_factor))
                 final_feats.append(new_feat)
                 envi_id_counter += 1
 
@@ -236,7 +236,7 @@ class TrafficEnviTask(QgsTask):
                 envi_id = feat["enviID"]
                 em_usr, em_no, em_no2, em_o3, em_pm10, em_pm25 = [], [], [], [], [], []
                 for h in range(24):
-                    q = feat[f"h_{h:02d}"]
+                    q = feat[f"hour_{h:02d}"]
                     em_usr.append(0.0)
                     em_o3.append(0.0)
                     em_no.append(float((q * ef_no) / 3.6))
