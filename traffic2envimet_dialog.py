@@ -67,19 +67,19 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.mQgsDoubleSpinBox_SimilarityTolerance.setRange(0.0, 1000.0)
         self.mQgsDoubleSpinBox_SimilarityTolerance.setValue(3.0)
         self.mQgsDoubleSpinBox_ScalingFactor.setRange(0.1, 10000.0)
-        self.mQgsDoubleSpinBox_ScalingFactor.setValue(5.0)
+        self.mQgsDoubleSpinBox_ScalingFactor.setValue(1.0)
         self.mQgsDoubleSpinBox_EmFacNOx.setRange(0.0, 100.0)
         self.mQgsDoubleSpinBox_EmFacNOx.setValue(0.180)
         self.mQgsDoubleSpinBox_EmFacNOx.setSingleStep(0.010)
         self.mQgsDoubleSpinBox_EmFacPM10.setRange(0.0, 100.0)
         self.mQgsDoubleSpinBox_EmFacPM10.setValue(0.020)
         self.mQgsDoubleSpinBox_EmFacPM10.setSingleStep(0.010)
-        self.mQgsDoubleSpinBox_NORatio.setRange(0.0, 1.0)
-        self.mQgsDoubleSpinBox_NORatio.setSingleStep(0.05) 
-        self.mQgsDoubleSpinBox_NORatio.setValue(0.5)
+        self.mQgsDoubleSpinBox_NO2Ratio.setRange(0.0, 1.0)
+        self.mQgsDoubleSpinBox_NO2Ratio.setSingleStep(0.05) 
+        self.mQgsDoubleSpinBox_NO2Ratio.setValue(0.2)
         self.mQgsDoubleSpinBox_PMRatio.setRange(0.0, 1.0)
         self.mQgsDoubleSpinBox_PMRatio.setSingleStep(0.05)
-        self.mQgsDoubleSpinBox_PMRatio.setValue(0.5)       
+        self.mQgsDoubleSpinBox_PMRatio.setValue(0.6)       
 
         self.mQgsFileWidget_OutputFile.setFilter("GeoPackage (*.gpkg)")
         self.mQgsFileWidget_OutputFile.setStorageMode(STORAGE_SAVE)
@@ -98,7 +98,6 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
     def auto_select_layers(self):
         """Guesses the correct layer for streets and traffic based on layer names."""
         for layer in QgsProject.instance().mapLayers().values():
-            # Ensure it's a vector layer 
             if layer.type() == 0:  
                 name_lower = layer.name().lower()
                 if 'street' in name_lower:
@@ -115,13 +114,11 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
 
         fields = [field.name() for field in layer.fields()]
         
-        # 1. Datetime guesser
         for f in fields:
             if any(keyword in f.lower() for keyword in ['time', 'date', 'start']):
                 self.mFieldComboBox_DateTime.setField(f)
                 break
                 
-        # 2. Priority-based Trip ID guesser
         id_priorities = ['group_id', 'groupid', 'trip_id', 'tripid', 'id', 'trip', 'ident', 'fid']
         matched = False
         
@@ -134,7 +131,6 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
             if matched:
                 break
         
-        # Fallback if no exact match is found, but the field contains 'id'
         if not matched:
             for f in fields:
                 if 'id' in f.lower():
@@ -201,7 +197,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
             'scaling_factor': self.mQgsDoubleSpinBox_ScalingFactor.value(),
             'ef_nox': self.mQgsDoubleSpinBox_EmFacNOx.value(),
             'ef_pm10': self.mQgsDoubleSpinBox_EmFacPM10.value(),
-            'v_ratio_no': self.mQgsDoubleSpinBox_NORatio.value(),
+            'v_ratio_no2': self.mQgsDoubleSpinBox_NO2Ratio.value(),
             'v_ratio_pm': self.mQgsDoubleSpinBox_PMRatio.value(),
             'output_file': output_file
         }

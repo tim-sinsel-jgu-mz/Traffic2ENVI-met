@@ -24,7 +24,6 @@ except AttributeError:
 class TrafficEnviTask(QgsTask):
     """Background task to calculate traffic trajectories and emissions."""
 
-    # Create a custom signal to send strings to the log
     log_message = pyqtSignal(str)
     
     def __init__(self, description, params, on_finished_callback):
@@ -49,7 +48,7 @@ class TrafficEnviTask(QgsTask):
             scaling_factor = self.params['scaling_factor']
             ef_nox = self.params['ef_nox']
             ef_pm10 = self.params['ef_pm10']
-            v_ratio_no = self.params['v_ratio_no']
+            v_ratio_no2 = self.params['v_ratio_no2']
             v_ratio_pm = self.params['v_ratio_pm']
             
             self.output_gpkg = self.params['output_file']
@@ -80,6 +79,7 @@ class TrafficEnviTask(QgsTask):
 
             # --- STEP 2 ---
             self.log_message.emit("Step 2/7: Preparing memory layer and spatial index...")
+            self.log_message.emit("Note: Trajectories are currently binned by trip start time, which may slightly shift emission profiles for trips > 1 hour.")
             memory_layer = QgsVectorLayer(f"LineString?crs={crs_str}", "Temp_Counts", "memory")
             provider = memory_layer.dataProvider()
             provider.addAttributes([QgsField("tempID", FIELD_TYPE_INT)])
@@ -202,9 +202,18 @@ class TrafficEnviTask(QgsTask):
                 new_feat = QgsFeature(final_layer.fields())
                 new_feat.setGeometry(merged_geom)
                 new_feat.setAttribute("enviID", f"{envi_id_counter:06d}")
+                
+                hourly_volumes = []
                 for h in range(24):
                     avg_raw_count = sum([mem_features[fid][f"hour_{h:02d}"] for fid in grp]) / len(grp)
-                    new_feat.setAttribute(f"hour_{h:02d}", round(avg_raw_count * scaling_factor))
+                    rounded_volume = round(avg_raw_count * scaling_factor)
+                    new_feat.setAttribute(f"hour_{h:02d}", rounded_volume)
+                    hourly_volumes.append(rounded_volume)
+                
+                # Check for segments rounding entirely to zero
+                if sum(hourly_volumes) == 0:
+                    self.log_message.emit(f"Warning: Merged Segment {envi_id_counter:06d} rounded to 0 vehicles across all hours.")
+
                 final_feats.append(new_feat)
                 envi_id_counter += 1
 
@@ -215,8 +224,15 @@ class TrafficEnviTask(QgsTask):
 
             # --- STEP 6 ---
             self.log_message.emit("Step 6/7: Generating ENVI-met JSON database...")
-            ef_no = ef_nox * (1 - v_ratio_no)
-            ef_no2 = ef_nox * v_ratio_no
+            
+            # Molar mass conversion for literal NO branch mapping
+            M_NO, M_NO2 = 30.006, 46.006
+            
+            # v_ratio_no2 is a molar fraction. Convert NO back to literal mass.
+            ef_no  = ef_nox * (1.0 - v_ratio_no2) * (M_NO / M_NO2)
+            ef_no2 = ef_nox * v_ratio_no2
+            
+            # PM remains a mass fraction
             ef_pm25 = ef_pm10 * v_ratio_pm
 
             json_db = {
