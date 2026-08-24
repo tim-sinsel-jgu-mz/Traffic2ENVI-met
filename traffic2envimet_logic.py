@@ -79,7 +79,6 @@ class TrafficEnviTask(QgsTask):
 
             # --- STEP 2 ---
             self.log_message.emit("Step 2/7: Preparing memory layer and spatial index...")
-            self.log_message.emit("Note: Trajectories are currently binned by trip start time, which may slightly shift emission profiles for trips > 1 hour.")
             memory_layer = QgsVectorLayer(f"LineString?crs={crs_str}", "Temp_Counts", "memory")
             provider = memory_layer.dataProvider()
             provider.addAttributes([QgsField("tempID", FIELD_TYPE_INT)])
@@ -189,7 +188,12 @@ class TrafficEnviTask(QgsTask):
             self.log_message.emit("Step 5/7: Applying scaling factor...")
             final_layer = QgsVectorLayer(f"MultiLineString?crs={crs_str}", "Final_Merged_Counts", "memory")
             final_prov = final_layer.dataProvider()
-            final_prov.addAttributes([QgsField("enviID", FIELD_TYPE_STRING, len=6)])
+            
+            # Added the new total_24h field here
+            final_prov.addAttributes([
+                QgsField("enviID", FIELD_TYPE_STRING, len=6),
+                QgsField("total_24h", FIELD_TYPE_INT)
+            ])
             for h in range(24): 
                 final_prov.addAttributes([QgsField(f"hour_{h:02d}", FIELD_TYPE_INT)])
             final_layer.updateFields()
@@ -210,8 +214,12 @@ class TrafficEnviTask(QgsTask):
                     new_feat.setAttribute(f"hour_{h:02d}", rounded_volume)
                     hourly_volumes.append(rounded_volume)
                 
+                # Calculate sum and set the new total_24h attribute
+                total_sum = sum(hourly_volumes)
+                new_feat.setAttribute("total_24h", total_sum)
+                
                 # Check for segments rounding entirely to zero
-                if sum(hourly_volumes) == 0:
+                if total_sum == 0:
                     self.log_message.emit(f"Warning: Merged Segment {envi_id_counter:06d} rounded to 0 vehicles across all hours.")
 
                 final_feats.append(new_feat)
