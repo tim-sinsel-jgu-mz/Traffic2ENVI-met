@@ -33,7 +33,7 @@ This tool is designed for urban climatologists and environmental modelers who ne
 2. Click the **Traffic to ENVI-met** icon in your QGIS toolbar.
 3. Select your input layers from the dropdowns. The plugin will attempt to auto-detect your Datetime and Trip ID fields.
 4. Adjust the **Search Radius**, **Segment Split Sizes**, and **Scaling Factors** to fit your dataset.
-5. Change the base **Emission Factors** (g/km) for NOx and PM10, if necessary.
+5. Change the base **Emission Factors** (g/km) for NOx and PM10 and the **Split Ratios**, if necessary.
 6. Select an output destination for your resulting GeoPackage that holds the line emissions with ENVI-met database item column to be gridded as model area sources with the Geodata2ENVI-met plugin.
 7. Click **Start**. The plugin will generate the `.gpkg` map layer and output the `projectdatabase.edb` directly into the same folder.
 
