@@ -68,12 +68,12 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.mQgsDoubleSpinBox_SimilarityTolerance.setValue(3.0)
         self.mQgsDoubleSpinBox_ScalingFactor.setRange(0.1, 10000.0)
         self.mQgsDoubleSpinBox_ScalingFactor.setValue(1.0)
-        self.mQgsDoubleSpinBox_EmFacNOx.setRange(0.0, 100.0)
-        self.mQgsDoubleSpinBox_EmFacNOx.setValue(0.180)
-        self.mQgsDoubleSpinBox_EmFacNOx.setSingleStep(0.010)
-        self.mQgsDoubleSpinBox_EmFacPM10.setRange(0.0, 100.0)
-        self.mQgsDoubleSpinBox_EmFacPM10.setValue(0.020)
-        self.mQgsDoubleSpinBox_EmFacPM10.setSingleStep(0.010)
+        self.mQgsDoubleSpinBox_EmissionFactorNO.setRange(0.0, 100.0)
+        self.mQgsDoubleSpinBox_EmissionFactorNO.setValue(0.180)
+        self.mQgsDoubleSpinBox_EmissionFactorNO.setSingleStep(0.010)
+        self.mQgsDoubleSpinBox_EmissionFactorPM10.setRange(0.0, 100.0)
+        self.mQgsDoubleSpinBox_EmissionFactorPM10.setValue(0.020)
+        self.mQgsDoubleSpinBox_EmissionFactorPM10.setSingleStep(0.010)
         self.mQgsDoubleSpinBox_NO2Ratio.setRange(0.0, 1.0)
         self.mQgsDoubleSpinBox_NO2Ratio.setSingleStep(0.05) 
         self.mQgsDoubleSpinBox_NO2Ratio.setValue(0.2)
@@ -195,8 +195,8 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
             'split_length': self.mQgsDoubleSpinBox_StreetSegmentSize.value(),
             'similarity_tolerance': self.mQgsDoubleSpinBox_SimilarityTolerance.value(),
             'scaling_factor': self.mQgsDoubleSpinBox_ScalingFactor.value(),
-            'ef_nox': self.mQgsDoubleSpinBox_EmFacNOx.value(),
-            'ef_pm10': self.mQgsDoubleSpinBox_EmFacPM10.value(),
+            'ef_nox': self.mQgsDoubleSpinBox_EmissionFactorNO.value(),
+            'ef_pm10': self.mQgsDoubleSpinBox_EmissionFactorPM10.value(),
             'v_ratio_no2': self.mQgsDoubleSpinBox_NO2Ratio.value(),
             'v_ratio_pm': self.mQgsDoubleSpinBox_PMRatio.value(),
             'output_file': output_file

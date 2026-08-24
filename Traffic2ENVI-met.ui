@@ -200,7 +200,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacNOx">
+                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmissionFactorNO">
                   <property name="toolTip">
                    <string>Base emission factor for Nitrogen Oxides (NOx) for this traffic dataset in grams per kilometer (g/km).</string>
                   </property>
@@ -217,7 +217,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmFacPM10">
+                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_EmissionFactorPM10">
                   <property name="toolTip">
                    <string>Base emission factor for PM10 (including non-exhaust wear) for this traffic dataset in grams per kilometer (g/km).</string>
                   </property>
