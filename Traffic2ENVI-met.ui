@@ -224,17 +224,17 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_NORatio">
+                 <widget class="QLabel" name="label_NO2Ratio">
                   <property name="toolTip">
                    <string>Fraction (0.0 to 1.0) of NOx that is emitted specifically as NO2.</string>
                   </property>
                   <property name="text">
-                   <string>Define Ratio for NO/NOx Splits</string>
+                   <string>Define Ratio for NO2/NOx Splits</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NORatio">
+                 <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_NO2Ratio">
                   <property name="toolTip">
                    <string>Fraction (0.0 to 1.0) of NOx that is emitted specifically as NO2.</string>
                   </property>
