@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
-    <height>852</height>
+    <width>605</width>
+    <height>843</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>589</width>
-        <height>832</height>
+        <width>585</width>
+        <height>823</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -190,7 +190,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_EmFacNO">
+                 <widget class="QLabel" name="label_EmissionFactorNO">
                   <property name="toolTip">
                    <string>Base emission factor for Nitrogen Oxides (NOx) for this traffic dataset in grams per kilometer (g/km).</string>
                   </property>
@@ -207,7 +207,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_EmFacPM">
+                 <widget class="QLabel" name="label_EmissionFactorPM">
                   <property name="toolTip">
                    <string>Base emission factor for PM10 (including non-exhaust wear) for this traffic dataset in grams per kilometer (g/km).</string>
                   </property>
