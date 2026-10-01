@@ -1,4 +1,6 @@
+import io
 import os
+import re
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QDialog, QMessageBox, QDialogButtonBox
 from qgis.core import QgsApplication, QgsMapLayerProxyModel, QgsProject
@@ -20,9 +22,18 @@ except AttributeError:
     FILTER_LINE = QgsMapLayerProxyModel.LineLayer
     STORAGE_SAVE = QgsFileWidget.SaveFile
 
+def load_ui_type(path):
+    """Load a Designer file for PyQt5 (QGIS 3) and PyQt6 (QGIS 4) alike. The Qt 6 Designer writes
+    scoped enum names (Qt::Orientation::Horizontal) that the PyQt5 uic cannot parse; they are
+    shortened to Qt::Horizontal, which both read."""
+    with open(path, encoding='utf-8') as f:
+        ui = f.read()
+    shorten = lambda m: re.sub(r'\b(\w+)::\w+::(\w+)\b', r'\1::\2', m.group(0))
+    ui = re.sub(r'<(enum|set)>.*?</\1>', shorten, ui)
+    return uic.loadUiType(io.StringIO(ui))
+
 # Load the UI file
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'Traffic2ENVI-met.ui'))
+FORM_CLASS, _ = load_ui_type(os.path.join(os.path.dirname(__file__), 'Traffic2ENVI-met.ui'))
 
 class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
     def __init__(self, parent=None):
