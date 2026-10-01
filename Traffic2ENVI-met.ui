@@ -24,8 +24,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>585</width>
-        <height>823</height>
+        <width>599</width>
+        <height>900</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -101,6 +101,23 @@
                  <widget class="QgsFieldComboBox" name="mFieldComboBox_DateTime">
                   <property name="toolTip">
                    <string>Dataset should have a start time in seconds since model start to enable the sorting of trips to the corresponding hours of a day.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_TimeOffset">
+                  <property name="toolTip">
+                   <string>Hours added to the trajectory times to put them on the ENVI-met model clock. ENVI-met applies the emission profile on its fixed model time zone (e.g. UTC+1) without daylight saving time. Trajectories in local clock time need -1 for a summer simulation (CEST) and 0 in winter (CET).</string>
+                  </property>
+                  <property name="text">
+                   <string>Define Time Offset from Trajectory Time (like Daylight Saving Hour) to ENVI-met Model Time [h]</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QgsSpinBox" name="mQgsSpinBox_TimeOffset">
+                  <property name="toolTip">
+                   <string>Hours added to the trajectory times to put them on the ENVI-met model clock. ENVI-met applies the emission profile on its fixed model time zone (e.g. UTC+1) without daylight saving time. Trajectories in local clock time need -1 for a summer simulation (CEST) and 0 in winter (CET).</string>
                   </property>
                  </widget>
                 </item>
@@ -304,10 +321,10 @@
           <item>
            <widget class="QDialogButtonBox" name="buttonBox">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="standardButtons">
-             <set>QDialogButtonBox::Cancel|QDialogButtonBox::Close</set>
+             <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Close</set>
             </property>
            </widget>
           </item>
@@ -340,6 +357,11 @@
    <class>QgsMapLayerComboBox</class>
    <extends>QComboBox</extends>
    <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>qgsspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

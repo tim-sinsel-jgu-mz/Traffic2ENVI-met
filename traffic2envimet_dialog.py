@@ -79,7 +79,10 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         self.mQgsDoubleSpinBox_NO2Ratio.setValue(0.2)
         self.mQgsDoubleSpinBox_PMRatio.setRange(0.0, 1.0)
         self.mQgsDoubleSpinBox_PMRatio.setSingleStep(0.05)
-        self.mQgsDoubleSpinBox_PMRatio.setValue(0.6)       
+        self.mQgsDoubleSpinBox_PMRatio.setValue(0.6)
+        self.mQgsSpinBox_TimeOffset.setRange(-12, 12)
+        self.mQgsSpinBox_TimeOffset.setValue(0)
+        self.mQgsSpinBox_TimeOffset.setClearValue(0)
 
         self.mQgsFileWidget_OutputFile.setFilter("GeoPackage (*.gpkg)")
         self.mQgsFileWidget_OutputFile.setStorageMode(STORAGE_SAVE)
@@ -98,7 +101,7 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
     def auto_select_layers(self):
         """Guesses the correct layer for streets and traffic based on layer names."""
         for layer in QgsProject.instance().mapLayers().values():
-            if layer.type() == 0:  
+            if layer.type() == 0:
                 name_lower = layer.name().lower()
                 if 'street' in name_lower:
                     self.mMapLayerComboBox_Streets.setLayer(layer)
@@ -185,10 +188,21 @@ class Traffic2ENVIMetDialog(QDialog, FORM_CLASS):
         if not output_file.lower().endswith('.gpkg'):
             output_file += '.gpkg'
 
+        # The task re-opens the layers from their source in its own thread; a memory layer has none.
+        for layer in (osm_layer, traj_layer):
+            if layer.providerType() == 'memory':
+                QMessageBox.warning(self, "Temporary Layer",
+                                    f"'{layer.name()}' is a temporary layer. Please save it to a file first.")
+                return
+
         params = {
             'osm_source': osm_layer.source(),
+            'osm_provider': osm_layer.providerType(),
+            'osm_subset': osm_layer.subsetString(),
             'traj_source': traj_layer.source(),
-            'crs_str': osm_layer.crs().toWkt(),
+            'traj_provider': traj_layer.providerType(),
+            'traj_subset': traj_layer.subsetString(),
+            'hour_offset': self.mQgsSpinBox_TimeOffset.value(),
             'datetime_field': self.mFieldComboBox_DateTime.currentField(),
             'unique_id_field': self.mFieldComboBox_TripID.currentField(),
             'search_radius': self.mQgsDoubleSpinBox_SearchRadius.value(),

@@ -33,9 +33,18 @@ This tool is designed for urban climatologists and environmental modelers who ne
 2. Click the **Traffic to ENVI-met** icon in your QGIS toolbar.
 3. Select your input layers from the dropdowns. The plugin will attempt to auto-detect your Datetime and Trip ID fields.
 4. Adjust the **Search Radius**, **Segment Split Sizes**, and **Scaling Factors** to fit your dataset.
-5. Change the base **Emission Factors** (g/km) for NOx and PM10 and the **Split Ratios**, if necessary.
-6. Select an output destination for your resulting GeoPackage that holds the line emissions with ENVI-met database item column to be gridded as model area sources with the Geodata2ENVI-met plugin.
-7. Click **Start**. The plugin will generate the `.gpkg` map layer and output the `projectdatabase.edb` directly into the same folder.
+5. Set the **Time Offset** from the trajectory clock to the ENVI-met model clock. ENVI-met applies the emission profile on its fixed model time zone (e.g. UTC+1) without daylight saving time, so trajectories in local clock time need `-1` for a summer simulation (CEST) and `0` in winter (CET). Summer and winter simulations therefore need separate databases.
+6. Change the base **Emission Factors** (g/km) for NOx (as NO2-equivalent) and PM10 (total, including PM2.5) and the **Split Ratios**, if necessary.
+7. Select an output destination for your resulting GeoPackage that holds the line emissions with ENVI-met database item column to be gridded as model area sources with the Geodata2ENVI-met plugin.
+8. Click **Execute**. The plugin will generate the `.gpkg` map layer and output the `projectdatabase.edb` directly into the same folder.
+
+### Input requirements and outputs
+* The street layer needs a projected CRS in metres (e.g. UTM); trajectories in another CRS are reprojected to it. Layer filters set in QGIS are respected. Temporary (memory) layers have to be saved to a file first.
+* Streets are filtered to the road classes primary, secondary, residential and their links if the layer has a Geofabrik-style `fclass` field; otherwise all lines are used.
+* Where parallel street lines lie within twice the search radius of each other (dual carriageways mapped as two lines, service roads), a trip is counted only on the line it passes closest to, so both directions are not counted on both lines. Crossing streets are not affected.
+* The trip time field may hold seconds after midnight, a time or a date-time. Trips without a time are skipped; trips starting after 24:00 are wrapped into the daily profile.
+* The GeoPackage `hour_XX` fields hold the vehicles per hour of the interval `[XX:00, XX+1:00)` on the model clock. ENVI-met interpolates the emission profile linearly between full hours, so the database value at `XX:00` is the mean of the intervals before and after it; the daily total is unchanged.
+* An existing `projectdatabase.edb` in the output folder is updated: emitters from an earlier run of this plugin are replaced, all other emitters and database items are kept. An existing GeoPackage keeps its other layers.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
